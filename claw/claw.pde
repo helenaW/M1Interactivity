@@ -1,4 +1,3 @@
-
 import processing.serial.*;
 import cc.arduino.*;
 
@@ -28,7 +27,7 @@ void draw() {
   stroke(255);
   //input coordinates
   float a = (arduino.analogRead(0));
-  float b = (arduino.analogRead(1));
+  float b = (arduino.analogRead(2));
   float movA = 0;
   float movB = 0;
   float weight = map(arduino.analogRead(3), 0, 1023, 0, 40);
@@ -61,9 +60,13 @@ void draw() {
   } else if( locB <= 0 && movB >= 0 || locB >= height && movB <= 0){
     locB += movB;
   }
- 
-  ellipse(locA, locB, weight, weight);
-  fill(78);
+  background(0);
+  line(locA, 800, 200, 200); 
+  line(locB, 800, 800, 200);
+  stroke(256);
+  
+  //ellipse(locA, locB, weight, weight);
+  //fill(78);
   println("x=" + a + " y=" + b);
   delay(10);
 }
