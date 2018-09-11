@@ -26,7 +26,7 @@ void draw() {
   stroke(255);
   //input coordinates
   float a = (arduino.analogRead(0));
-  float b = (arduino.analogRead(2));
+  float b = (arduino.analogRead(1));
   float movA = 0;
   float movB = 0;
   float weight = map(arduino.analogRead(3), 0, 1023, 0, 40);
@@ -41,7 +41,7 @@ void draw() {
   
    if(b<770){
     movB = -10;
-  }else if(b>800){
+  }else if(b>900){
     movB = 10;
   }else{
     movB=0;
