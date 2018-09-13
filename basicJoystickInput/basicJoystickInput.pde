@@ -15,7 +15,7 @@ println(Serial.list());
   // Modify this line, by changing the "0" to the index of the serial
   // port corresponding to your Arduino board (as it appears in the list
   // printed by the line above).
-  arduino = new Arduino(this, "COM3", 57600);
+  arduino = new Arduino(this, "/dev/tty.usbmodem14141", 57600);
   arduino.pinMode(12, Arduino.INPUT);
 
 }
@@ -26,22 +26,21 @@ void draw() {
   stroke(255);
   //input coordinates
   float a = (arduino.analogRead(0));
-  float b = (arduino.analogRead(2));
+  float b = (arduino.analogRead(1));
   float movA = 0;
   float movB = 0;
-  float weight = map(arduino.analogRead(3), 0, 1023, 0, 40);
   //nudging ball in direction
-  if(a<750){
+  if(a<480){
     movA = -10;
-  }else if(a>880){
+  }else if(a>530){
     movA = 10;
   }else{
     movA =0;
   }
   
-   if(b<770){
+   if(b<480){
     movB = -10;
-  }else if(b>800){
+  }else if(b>530){
     movB = 10;
   }else{
     movB=0;
@@ -59,8 +58,9 @@ void draw() {
     locB += movB;
   }
  
-  ellipse(locA, locB, weight, weight);
+  ellipse(locA, locB, 40, 40);
   fill(78);
   println("x=" + a + " y=" + b);
-  delay(10);
+  delay(50);
+
 }
