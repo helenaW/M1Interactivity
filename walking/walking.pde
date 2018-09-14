@@ -15,8 +15,8 @@ float movB = 0;
 
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  //size(1500,1500);
-  fullScreen();
+  size(2000,2000);
+  //fullScreen();
   background(255, 224, 150);
   sx = width/2;
   sy = height/2;
@@ -27,12 +27,11 @@ void setup(){
 }
 
 void draw(){
-  
   float x1 = (arduino.analogRead(0));
   float y1 = (arduino.analogRead(1));
   float x2 = (arduino.analogRead(2));
   float y2 = (arduino.analogRead(3));
-  int speed = 10;
+  int speed = 15;
   //nudging ball in direction
   float movX1 = 0;
   float movY1 = 0;
@@ -69,10 +68,36 @@ void draw(){
   }else{
     movY2=0;
   }
-  locX1 += movX1;
-  locY1 += movY1;
-  locX2 += movX2;
-  locY2 += movY2;
+  println("x1" + x1);
+  println("x2" + x2);
+   // restricts ball going over the edge
+  if(locX1 > 0 && locX1 < width){
+    locX1 += movX1;  
+  } else if( locX1 <= 0 && movX1 >= 0 || locX1 >= width && movX1 <= 0){
+    locX1 += movX1;
+  }
+  
+ if(locY1 > 0 && locY1 < height){
+    locY1 += movY1;  
+  } else if( locY1 <= 0 && movY1 >= 0 || locY1 >= height && movY1 <= 0){
+    locY1 += movY1;
+  }
+   // restricts ball going over the edge
+  if(locX2 > 0 && locX2 < width){
+    locX2 += movX2;  
+  } else if( locX2 <= 0 && movX2 >= 0 || locX2 >= width && movX2 <= 0){
+    locX2 += movX2;
+  }
+  
+ if(locY2 > 0 && locY2 < height){
+    locY2 += movY2;  
+  } else if( locY2 <= 0 && movY2 >= 0 || locY2 >= height && movY2 <= 0){
+    locY2 += movY2;
+  }
+  //locX1 += movX1;
+  //locY1 += movY1;
+  //locX2 += movX2;
+  //locY2 += movY2;
   fill(255);
   rect(0,0,width,height);
   upperArm(parseInt(locX1), parseInt(locY1));
@@ -86,7 +111,7 @@ void upperArm(int x, int y){
     int dy = y - sy;
     float distance = sqrt(dx*dx+dy*dy);
     
-    print("dx= "+dx+" dy="+dy+" distance=" + distance + " ");
+    //print("dx= "+dx+" dy="+dy+" distance=" + distance + " ");
 
     int a = 500;
     int b = 500;
@@ -103,11 +128,11 @@ void upperArm(int x, int y){
   
     ex = int((cos(E) * b)) + sx;
     ey = int((sin(E) * b)) + sy;
-    print("UpperArm Angle= "+degrees(E)+" ");
+    //print("UpperArm Angle= "+degrees(E)+" ");
 
     hx = int((cos(D+B) * a)) + ex;
     hy = int((sin(D+B) * a)) + ey;
-    println("LowerArm Angle= "+degrees((D+B)));
+    //println("LowerArm Angle= "+degrees((D+B)));
     strokeWeight(10);
     //stroke(255,0,0,100);
     fill(0);    
@@ -120,7 +145,7 @@ void upperArm(int x, int y){
     line(sx,sy,ex,ey);
     line(ex,ey,hx,hy);
   
-    println("ex="+ex+" ey"+ey);
+    //println("ex="+ex+" ey"+ey);
   
     fill(240,0,200,200);
     //ellipse(dx,dy,10,10);
