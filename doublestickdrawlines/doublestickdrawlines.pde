@@ -5,7 +5,11 @@ import cc.arduino.*;
 Arduino arduino;
 float locA;
 float locB;
+float movA = 0;
+float movB = 0;
 boolean pressed;
+float oldLocA;
+float oldLocB;
 void setup() {
 locA= width / 2;
 locB= height / 2;
@@ -22,15 +26,16 @@ println(Serial.list());
 
 }
 void draw() {
-
+  oldLocA = locA;
+  oldLocB = locB;
   //background(0);
   frameRate(30);
   stroke(255);
   //input coordinates
   float a = (arduino.analogRead(0));
   float b = (arduino.analogRead(1));
-  float movA = 0;
-  float movB = 0;
+  movA = 0;
+  movB = 0;
   float weight = map(arduino.analogRead(3), 0, 1023, 0, 40);
   int speed = 10;
   //nudging ball in direction
@@ -62,9 +67,11 @@ void draw() {
     locB += movB;
   }
  
-  ellipse(locA, locB, weight, weight);
+  //ellipse(locA, locB, weight, weight);
+  line(oldLocA, oldLocB, locA, locB);
   fill(78);
   stroke(78);
+  strokeWeight(weight);
   println("x=" + a + " y=" + b);
   delay(5);
 }

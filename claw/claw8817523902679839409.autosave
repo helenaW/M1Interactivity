@@ -67,6 +67,8 @@ void draw() {
   }
   // restricts ball going over the edge
   if(locA > 0 && locA < width){
+    
+    
     locA += movA;  
   } else if( locA <= 0 && movA >= 0 || locA >= width && movA <= 0){
     locA += movA;
