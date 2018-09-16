@@ -14,8 +14,9 @@ boolean foot1Ground = false;
 boolean foot2Ground = false;
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  size(2000,1000);
+  size(1920,1080);
   //fullScreen();
+  smooth();
   anchor = new PVector(0, 0);
   femurLength = int(150);
   tibiaLength = int(100);
@@ -27,6 +28,7 @@ void setup(){
 
 void draw(){
   PVector V1 = new PVector(arduino.analogRead(0), arduino.analogRead(1));
+  
   PVector V2 = new PVector(arduino.analogRead(2), arduino.analogRead(3));
   int speed = 15;
   //nudging ball in direction
@@ -94,16 +96,9 @@ void draw(){
   rect(0,0,width,height);
   knee1 = upperArm(parseInt(loc1.x), parseInt(loc1.y));
   knee2 = upperArm(parseInt(loc2.x), parseInt(loc2.y));
-
   anchor = PVector.lerp(knee1, knee2, 0.5);
- // ellipse(anchor.x,anchor.y,25,25);
-  //sx = width / 2;
-  //sy = height / 2;
-   sx = parseInt(lerp(sx, anchor.x, 0.5));
-  sy = parseInt(lerp(height / 2, anchor.y, 0.5));
-  println(sx);
-  //sx = parseInt(anchor.x);
-  //sy = parseInt(anchor.y);
+  sx = parseInt(lerp(abs(0 - sx), anchor.x, 0.05));
+  sy = parseInt(lerp(height / 2, anchor.y, 0.1));
   //pushMatrix();
   //translate(anchor.x, anchor.y);
   //popMatrix();
@@ -116,7 +111,7 @@ PVector upperArm(int x, int y){
     
     //Upper and lower arm length
     int a = height / 3;
-    int b = height / 3;
+    int b = height / 3 ;
     float c = min(distance, a + b);
 
     float B = acos((b*b-a*a-c*c)/(-2*a*c));
@@ -135,11 +130,13 @@ PVector upperArm(int x, int y){
     strokeWeight(10);
     fill(0);    
     //ellipse(sx,sy,25,25);
+    ellipse(sx, sy - height / 3, 50, 50);
     ellipse(sx,sy,25,25);
     ellipse(ex,ey,25,25);
     ellipse(hx,hy,25,25);
     stroke(0);
     //line(sx,sy,ex,ey);
+    line(sx,sy - height / 3,sx,sy);
     line(sx,sy,ex,ey);
     line(ex,ey,hx,hy);
     fill(240,0,200,200);
