@@ -5,34 +5,41 @@ Arduino arduino;
 int sx,sy,ex,ey,hx,hy;
 int femurLength, tibiaLength,ua,la;
 float uad, lad;
+PVector loc1;
+PVector loc2;
+PVector anchor;
 float locX1;
 float locY1;
 float locX2;
 float locY2;
-boolean pressed;
-float movA = 0;
-float movB = 0;
+
 
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  size(2000,2000);
+  size(2000,1000);
   //fullScreen();
-  background(255, 224, 150);
-  sx = width/2;
-  sy = height/2;
+  anchor = new PVector(0, 0);
   femurLength = int(150);
   tibiaLength = int(100);
+  loc1 = new PVector(width / 2, height / 2);
+  loc2 = new PVector(width / 2, height / 2);
   locX1= width / 2;
   locY1= height / 2;
+  locX2 = width / 2;
+  locY2 = width / 2;
 }
 
 void draw(){
+  PVector V1 = new PVector(arduino.analogRead(0), arduino.analogRead(1));
+  PVector V2 = new PVector(arduino.analogRead(2), arduino.analogRead(3));
   float x1 = (arduino.analogRead(0));
   float y1 = (arduino.analogRead(1));
   float x2 = (arduino.analogRead(2));
   float y2 = (arduino.analogRead(3));
   int speed = 15;
   //nudging ball in direction
+  PVector mov1 = new PVector(0, 0);
+  PVector mov2 = new PVector(0, 0);
   float movX1 = 0;
   float movY1 = 0;
   float movX2 = 0;
@@ -94,6 +101,7 @@ void draw(){
   } else if( locY2 <= 0 && movY2 >= 0 || locY2 >= height && movY2 <= 0){
     locY2 += movY2;
   }
+  
   //locX1 += movX1;
   //locY1 += movY1;
   //locX2 += movX2;
@@ -102,6 +110,10 @@ void draw(){
   rect(0,0,width,height);
   upperArm(parseInt(locX1), parseInt(locY1));
   upperArm(parseInt(locX2), parseInt(locY2));
+  //sx = width / 2;
+  //sy = height / 2;
+  sx = width / 2;
+  sy = height / 2;
 }
 
 void upperArm(int x, int y){
@@ -112,9 +124,10 @@ void upperArm(int x, int y){
     float distance = sqrt(dx*dx+dy*dy);
     
     //print("dx= "+dx+" dy="+dy+" distance=" + distance + " ");
-
-    int a = 500;
-    int b = 500;
+    
+    //Upper and lower arm length
+    int a = height / 3;
+    int b = height / 3;
     float c = min(distance, a + b);
 
     float B = acos((b*b-a*a-c*c)/(-2*a*c));
