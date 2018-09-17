@@ -7,17 +7,17 @@ int femurLength, tibiaLength,ua,la;
 float uad, lad;
 PVector loc1;
 PVector loc2;
-PVector anchor;
+PVector kneeCenter;
 PVector knee1;
 PVector knee2;
 boolean foot1Ground = false;
 boolean foot2Ground = false;
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  size(1920,1080);
+  size(3500,2000);
   //fullScreen();
   smooth();
-  anchor = new PVector(0, 0);
+  kneeCenter = new PVector(0, 0);
   femurLength = int(150);
   tibiaLength = int(100);
   loc1 = new PVector(width / 2, height / 2);
@@ -27,8 +27,8 @@ void setup(){
 }
 
 void draw(){
+  //Get raw joystick data
   PVector V1 = new PVector(arduino.analogRead(0), arduino.analogRead(1));
-  
   PVector V2 = new PVector(arduino.analogRead(2), arduino.analogRead(3));
   int speed = 15;
   //nudging ball in direction
@@ -94,14 +94,12 @@ void draw(){
   }
   fill(255);
   rect(0,0,width,height);
+  //
   knee1 = upperArm(parseInt(loc1.x), parseInt(loc1.y));
   knee2 = upperArm(parseInt(loc2.x), parseInt(loc2.y));
-  anchor = PVector.lerp(knee1, knee2, 0.5);
-  sx = parseInt(lerp(abs(0 - sx), anchor.x, 0.05));
-  sy = parseInt(lerp(height / 2, anchor.y, 0.1));
-  //pushMatrix();
-  //translate(anchor.x, anchor.y);
-  //popMatrix();
+  kneeCenter = PVector.lerp(knee1, knee2, 0.5);
+  sx = parseInt(lerp(abs(0 - sx), kneeCenter.x, 0.05));
+  sy = parseInt(lerp(height / 2, kneeCenter.y, 0.1));
 }
 
 PVector upperArm(int x, int y){
@@ -130,7 +128,8 @@ PVector upperArm(int x, int y){
     strokeWeight(10);
     fill(0);    
     //ellipse(sx,sy,25,25);
-    ellipse(sx, sy - height / 3, 50, 50);
+    //Head
+    ellipse(sx, sy - height / 3, 100, 100);
     ellipse(sx,sy,25,25);
     ellipse(ex,ey,25,25);
     ellipse(hx,hy,25,25);
