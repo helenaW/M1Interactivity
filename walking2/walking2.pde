@@ -2,7 +2,7 @@ import processing.serial.*;
 import cc.arduino.*;
 
 Arduino arduino;
-int sx,sy,ex,ey,hx,hy;
+int sx,sy,ex,ey,hx,hy, armsx, armsy;
 int femurLength, tibiaLength,ua,la;
 float uad, lad;
 float grav1 = 0;
@@ -18,8 +18,8 @@ int jumpHeight;
 
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  size(2500,1500);
-  //fullScreen();
+  //size(3860,2560);
+  fullScreen();
   smooth();
   init();
 }
@@ -96,50 +96,64 @@ void draw(){
   } else if( loc2.y <= 0 && mov2.y >= 0 || loc2.y >= height && mov2.y <= 0){
     loc2.y += mov2.y;
   }
-  if(loc1.y >= height) {
-    foot1Ground = true;
-  }
-  else {
-    foot1Ground = false;
-  }
-  if(loc2.y >= height) {
-    foot2Ground = true;
-  }
-  else {
-    foot2Ground = false;
-  }
-  /*if(!foot1Ground && !foot2Ground) {
-    if(knee1.z > knee2.z) {
-      grav1 = 1999 - knee1.z ;
-      grav2 = 0;
-      
-    }
-    else {
-      grav2 = 1999 - knee2.z ;
-      grav1 = 0;
-      
-    }
-  }
-  else {
-    grav1 = 0;
-    grav2 = 0;
-    
-  }*/
-  if(!foot1Ground && !foot2Ground) {
-  
-  }
   
   fill(255);
   rect(0,0,width,height);
-  //
-  knee1 = upperArm(parseInt(loc1.x), parseInt(loc1.y),grav1);
-  knee2 = upperArm(parseInt(loc2.x), parseInt(loc2.y), grav2);
+  knee1 = leg(parseInt(loc1.x), parseInt(loc1.y));
+  knee2 = leg(parseInt(loc2.x), parseInt(loc2.y));
   kneeCenter = PVector.lerp(knee1, knee2, 0.5);
+  arm(parseInt(loc1.x + width / 15), parseInt(loc1.y - height / 2.5));
+  arm(parseInt(loc2.x + width / 15), parseInt(loc2.y - height / 2.5));
+  armsx = parseInt(lerp(abs(0 - sx), kneeCenter.x, 0.05));
+  armsy = parseInt(lerp(height / 4.5, kneeCenter.y, 0.1));
   sx = parseInt(lerp(abs(0 - sx), kneeCenter.x, 0.05));
   sy = parseInt(lerp(height / 2, kneeCenter.y, 0.1));
 }
 
-PVector upperArm(int x, int y, float gravity){
+PVector arm(int x, int y){
+  
+    int dx = x - armsx;
+    int dy = y - armsy;
+    float distance = sqrt(dx*dx+dy*dy);
+    
+    //Upper and lower arm length
+    int a = height / 6;
+    int b = height / 6;
+    float c = min(distance, a + b);
+
+    float B = -acos((b*b-a*a-c*c)/(-2*a*c));
+    float C = -acos((c*c-a*a-b*b)/(-2*a*b));
+
+    float D = atan2(dy,dx);
+    float E = D + B + PI + C;
+  
+    float segment1 = degrees(E);
+    float segment2 = degrees(D+B);
+    
+    ex = int((cos(E) * b)) + armsx;
+    ey = int((sin(E) * b)) + armsy;
+    hx = int((cos(D+B) * a)) + ex;
+    hy = int((sin(D+B) * a)) + ey;
+    //hy =+ parseInt(gravity);
+    //println(hy);
+    strokeWeight(10);
+    fill(0);    
+    //ellipse(sx,sy,25,25);
+    //Head
+    //ellipse(armsx, armsy - height / 3, 100, 100);
+    ellipse(armsx,armsy,25,25);
+    ellipse(ex,ey,25,25);
+    ellipse(hx,hy,35,35);
+    stroke(0);
+    //line(sx,sy,ex,ey);
+    //line(armsx,armsy - height / 3,armsx,armsy);
+    line(armsx,armsy,ex,ey);
+    line(ex,ey,hx,hy);
+    fill(240,0,200,200);
+    return new PVector(ex, ey, hy);
+}
+
+PVector leg(int x, int y){
   
     int dx = x - sx;
     int dy = y - sy;
@@ -162,17 +176,17 @@ PVector upperArm(int x, int y, float gravity){
     ex = int((cos(E) * b)) + sx;
     ey = int((sin(E) * b)) + sy;
     hx = int((cos(D+B) * a)) + ex;
-    hy = int((sin(D+B) * a)) + ey + parseInt(gravity);
+    hy = int((sin(D+B) * a)) + ey;
     //hy =+ parseInt(gravity);
     //println(hy);
     strokeWeight(10);
     fill(0);    
     //ellipse(sx,sy,25,25);
     //Head
-    ellipse(sx, sy - height / 3, 100, 100);
+    ellipse(sx, sy - height / 3, 120, 120);
     ellipse(sx,sy,25,25);
     ellipse(ex,ey,25,25);
-    ellipse(hx,hy,25,25);
+    ellipse(hx,hy,35,35);
     stroke(0);
     //line(sx,sy,ex,ey);
     line(sx,sy - height / 3,sx,sy);
