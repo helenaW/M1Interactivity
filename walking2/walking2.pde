@@ -14,11 +14,17 @@ PVector knee1;
 PVector knee2;
 boolean foot1Ground = false;
 boolean foot2Ground = false;
+int jumpHeight;
+
 void setup(){
   arduino = new Arduino(this, "COM3", 57600);
-  size(3500,2000);
+  size(2500,1500);
   //fullScreen();
   smooth();
+  init();
+}
+
+void init() {
   kneeCenter = new PVector(0, 0);
   femurLength = int(150);
   tibiaLength = int(100);
@@ -26,6 +32,7 @@ void setup(){
   loc2 = new PVector(0, height);
   knee1 = new PVector(0,0);
   knee2 = new PVector(0, 0);
+  jumpHeight = 0; 
 }
 
 void draw(){
@@ -91,14 +98,12 @@ void draw(){
   }
   if(loc1.y >= height) {
     foot1Ground = true;
-    //println("foot1");
   }
   else {
     foot1Ground = false;
   }
   if(loc2.y >= height) {
     foot2Ground = true;
-    //println("foot2");
   }
   else {
     foot2Ground = false;
@@ -120,6 +125,9 @@ void draw(){
     grav2 = 0;
     
   }*/
+  if(!foot1Ground && !foot2Ground) {
+  
+  }
   
   fill(255);
   rect(0,0,width,height);
@@ -172,6 +180,9 @@ PVector upperArm(int x, int y, float gravity){
     line(ex,ey,hx,hy);
     fill(240,0,200,200);
     return new PVector(ex, ey, hy);
-    
-   
+}
+
+void keyPressed() {
+  println("restart");
+  init();
 }

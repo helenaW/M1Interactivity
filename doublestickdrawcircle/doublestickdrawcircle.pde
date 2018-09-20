@@ -9,7 +9,8 @@ boolean pressed;
 void setup() {
 locA= width / 2;
 locB= height / 2;
-size(2000, 2000);
+//size(2000, 2000);
+fullScreen();
 smooth(); 
 //prints out serial ports
 println(Serial.list()); 
@@ -31,7 +32,7 @@ void draw() {
   float b = (arduino.analogRead(1));
   float movA = 0;
   float movB = 0;
-  float weight = map(arduino.analogRead(3), 0, 1023, 0, 40);
+  float weight = map(arduino.analogRead(3), 0, 1023, 10, 60);
   int speed = 10;
   //nudging ball in direction
   if(a<750){

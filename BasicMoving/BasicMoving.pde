@@ -13,7 +13,8 @@ float oldLocB;
 void setup() {
 locA= width / 2;
 locB= height / 2;
-size(2000, 2000);
+fullScreen();
+//size(2000, 2000);
 smooth(); 
 //prints out serial ports
 println(Serial.list()); 
